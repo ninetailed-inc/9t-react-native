@@ -16,10 +16,12 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
+    "@ninetailed/experience.js-plugin-insights": "^7.7.3",
     "@ninetailed/experience.js-react": "^7.7.3",
     "@ninetailed/experience.js-utils-contentful": "^7.7.3",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-navigation/native": "^6.0.2",
+    "contentful": "^10.12.7",
     "expo": "~51.0.18",
     "expo-constants": "~16.0.2",
     "expo-font": "~12.0.7",

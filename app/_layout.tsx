@@ -22,6 +22,7 @@ import ProfileDump from "@/components/ProfileDump";
 import NinetailedPageTracker from "@/components/NinetailedPageTracker";
 
 import queryString from "query-string";
+import NinetailedInsightsPlugin from "@ninetailed/experience.js-plugin-insights";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -34,6 +35,8 @@ export default function RootLayout() {
 
   const pathname = usePathname();
   const params = useGlobalSearchParams();
+  console.log(`Current pathanme`, pathname);
+  console.log(`Current params`, params);
 
   useEffect(() => {
     if (loaded) {
@@ -43,8 +46,8 @@ export default function RootLayout() {
 
   const ninetailed = useMemo(() => {
     const ninetailedApiClient = new NinetailedApiClient({
-      clientId: "3c00cace-cacb-4086-807b-c97b4453e197",
-      environment: "b2b-demo",
+      clientId: process.env.EXPO_PUBLIC_NINETAILED_CLIENT_ID || "",
+      environment: process.env.EXPO_PUBLIC_NINETAILED_ENV || "main",
       fetchImpl: fetch,
     });
     return new Ninetailed(ninetailedApiClient, {
@@ -59,6 +62,7 @@ export default function RootLayout() {
           userAgent: "",
         };
       },
+      plugins: [new NinetailedInsightsPlugin()],
     });
   }, []);
 
@@ -69,7 +73,7 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <NinetailedProvider ninetailed={ninetailed}>
-        <ProfileDump />
+        {/* <ProfileDump /> */}
         <NinetailedPageTracker />
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
