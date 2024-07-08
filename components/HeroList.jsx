@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Image, StyleSheet, Text, FlatList, View, Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { parseExperiences } from "../lib/experiences";
@@ -7,7 +7,7 @@ import {
   useExperience,
   useNinetailed,
 } from "@ninetailed/experience.js-react";
-import { ComponentTracker } from "./ninetailed/ComponentTracker";
+// import { ComponentTracker } from "./ninetailed/ComponentTracker";
 
 const Hero = React.forwardRef((props, ref) => {
   return (
@@ -26,6 +26,8 @@ function HeroExperienceWrapper({ item }) {
 }
 
 function HeroExperience({ item }) {
+  const ninetailed = useNinetailed();
+
   const baseline = {
     ...item,
     id: item.sys.id,
@@ -34,17 +36,28 @@ function HeroExperience({ item }) {
     baseline,
     experiences: parseExperiences(item),
   });
+
+  // Dummy element
+  const Tracker = <View style={{ display: "none" }}>Test</View>;
+
   if (loading) {
     return <Text>Loading...</Text>;
   }
+
   if (variant) {
+    if (experience) {
+      // TODO: This throws ERROR Unhandled promise rejection [TypeError: Cannot read property 'href' of undefined]
+      ninetailed.trackComponentView({
+        element: Tracker,
+        experience,
+        audience: experience.audience,
+        variant,
+        variantIndex,
+      });
+    }
+
     return (
       <View>
-        <ComponentTracker
-          experience={experience}
-          variant={variant}
-          variantIndex={variantIndex}
-        />
         <Hero {...variant} />
       </View>
     );
