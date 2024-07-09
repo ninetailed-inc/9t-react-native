@@ -10,7 +10,7 @@ import {
 import { useFonts } from "expo-font";
 import { Stack, useGlobalSearchParams, usePathname } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import "react-native-reanimated";
 import { NinetailedProvider } from "@ninetailed/experience.js-react";
 import { Ninetailed } from "@ninetailed/experience.js";
@@ -38,6 +38,12 @@ export default function RootLayout() {
   console.log(`Current pathanme`, pathname);
   console.log(`Current params`, params);
 
+  // useRef + useEffect avoids closure in useMemo
+  const navigation = useRef({ pathname, params });
+  useEffect(() => {
+    navigation.current = { pathname, params };
+  }, [pathname, params]);
+
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
@@ -51,20 +57,19 @@ export default function RootLayout() {
       fetchImpl: fetch,
     });
     return new Ninetailed(ninetailedApiClient, {
-      // TODO: This isn't pulling from the hook value dynamically
       buildClientContext: () => {
         return {
-          url: `https://reactnativeapp.dev${pathname}?${queryString.stringify(
-            params
-          )}`,
+          url: `https://reactnativeapp.dev${
+            navigation.current.pathname
+          }?${queryString.stringify(navigation.current.params)}`,
           referrer: "",
           locale: "en-US",
           userAgent: "",
         };
       },
-      plugins: [new NinetailedInsightsPlugin()],
+      plugins: [],
     });
-  }, []);
+  }, [navigation]);
 
   if (!loaded) {
     return null;
