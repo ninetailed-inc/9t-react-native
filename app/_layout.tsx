@@ -2,6 +2,8 @@ if (__DEV__) {
   require("../ReactotronConfig");
 }
 
+import "react-native-get-random-values";
+
 import {
   DarkTheme,
   DefaultTheme,
@@ -67,7 +69,7 @@ export default function RootLayout() {
           userAgent: "",
         };
       },
-      plugins: [],
+      plugins: [new NinetailedInsightsPlugin()],
     });
   }, [navigation]);
 
