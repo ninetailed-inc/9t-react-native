@@ -43,6 +43,17 @@ export function ComponentTracker<Variant extends Reference>({
     }
 
     if (componentElement) {
+      ninetailed.trackComponentView({
+        element: componentElement,
+        experience,
+        audience: experience?.audience,
+        variant:
+          "hidden" in variant && variant.hidden
+            ? { ...variant, id: `${variant.id}-hidden` }
+            : variant,
+        variantIndex,
+      });
+
       ninetailed.observeElement({
         element: componentElement,
         experience,
